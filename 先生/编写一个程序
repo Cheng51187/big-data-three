@@ -1,0 +1,91 @@
+intelliJ IDEA里面maven第三方架包配置（字尾附代码）
+一、框架需要使用hadoop（依赖hadoop）,定义唯一第三方框架满足三点：1、groupid 2、artifactid 3、version .
+    （注意在执行时需要这个hadoop，打包时不需要，所以添加一个<scope>provided<scope>来满足执行需要，打包不需要的情况。）
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>2.7.6</version>
+            <scope>provided</scope>
+        </dependency>
+二、包要解析成Json(依赖json)，所以配置Json解析包
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.4</version>
+        </dependency>
+三、配置代码打包需要的插件。
+        1、这个插件功能：可以将代码打包成可执行的架包。
+        2、包含所依赖的所有第三方架包
+    指定代码目录
+        <sourceDirectory>src/main</sourceDirectory>
+    插件
+        <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+        </plugins>
+    设置这个插件的配置，首先是可执行架包的后缀名
+        <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRef>
+                        jar-with-dependencies
+                    </descriptorRef>
+                </configuration>
+            </plugin>
+        </plugins>
+    设置这个插件运行时候的参数
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+附：完整代码
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>2.7.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.4</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src/main</sourceDirectory>
+        <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRef>
+                        jar-with-dependencies
+                    </descriptorRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
